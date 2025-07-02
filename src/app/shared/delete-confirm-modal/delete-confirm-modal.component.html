@@ -1,0 +1,42 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">Confirmar eliminación</h5>
+    <button
+      type="button"
+      class="btn-close"
+      (click)="activeModal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="text-center">
+      <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+      <h5>¿Estás seguro?</h5>
+      <p class="mb-0">
+        ¿Deseas eliminar al superhéroe
+        <strong>{{ hero?.name }}</strong
+        >? <br /><small class="text-muted"
+          >Esta acción no se puede deshacer.</small
+        >
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="activeModal.dismiss()"
+    >
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="deleteHero()"
+      [disabled]="loadingService.isLoading()"
+    >
+      @if(loadingService.isLoading()) {
+      <span class="spinner-border spinner-border-sm me-2"></span>
+      } Eliminar
+    </button>
+  </div>
+</div>

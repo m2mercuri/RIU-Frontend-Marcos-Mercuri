@@ -1,0 +1,241 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="d-flex align-items-center mb-4">
+        <button class="btn btn-outline-secondary me-3" (click)="goBack()">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <h1 class="h2 mb-0">
+          @if (isEditMode()) {
+          <i class="fas fa-user-edit text-success me-2"></i>
+          } @else {
+          <i class="fas fa-user-plus text-primary me-2"></i>
+          }
+          {{ isEditMode() ? "Editar Superhéroe" : "Agregar Nuevo Superhéroe" }}
+        </h1>
+      </div>
+
+      <div class="card shadow">
+        <div class="card-header bg-light">
+          <h5 class="card-title mb-0">
+            {{
+              isEditMode()
+                ? "Información del Superhéroe"
+                : "Datos del Nuevo Superhéroe"
+            }}
+          </h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="heroForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="name" class="form-label">
+                  Nombre del Superhéroe <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  class="form-control"
+                  formControlName="name"
+                  appUppercase
+                  placeholder="Ej: SUPERMAN"
+                  [class.is-invalid]="isFieldInvalid('name')"
+                  [class.is-valid]="isFieldValid('name')"
+                />
+                @if(isFieldInvalid('name')) {
+                <div class="invalid-feedback">
+                  <small *ngIf="heroForm.get('name')?.errors?.['required']">
+                    El nombre del superhéroe es obligatorio
+                  </small>
+                  <small *ngIf="heroForm.get('name')?.errors?.['minlength']">
+                    El nombre debe tener al menos 2 caracteres
+                  </small>
+                  <small *ngIf="heroForm.get('name')?.errors?.['maxlength']">
+                    El nombre no puede exceder 50 caracteres
+                  </small>
+                </div>
+                }
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="realName" class="form-label">
+                  Nombre Real <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="realName"
+                  class="form-control"
+                  formControlName="realName"
+                  placeholder="Ej: Clark Kent"
+                  [class.is-invalid]="isFieldInvalid('realName')"
+                  [class.is-valid]="isFieldValid('realName')"
+                />
+                @if(isFieldInvalid('realName')) {
+                <div class="invalid-feedback">
+                  <small *ngIf="heroForm.get('realName')?.errors?.['required']">
+                    El nombre real es obligatorio
+                  </small>
+                  <small
+                    *ngIf="heroForm.get('realName')?.errors?.['minlength']"
+                  >
+                    El nombre real debe tener al menos 2 caracteres
+                  </small>
+                </div>
+                }
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="city" class="form-label">
+                  Ciudad <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="city"
+                  class="form-control"
+                  formControlName="city"
+                  placeholder="Ej: Metropolis"
+                  [class.is-invalid]="isFieldInvalid('city')"
+                  [class.is-valid]="isFieldValid('city')"
+                />
+                @if(isFieldInvalid('city')) {
+                <div class="invalid-feedback">
+                  <small *ngIf="heroForm.get('city')?.errors?.['required']">
+                    La ciudad es obligatoria
+                  </small>
+                </div>
+                }
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="team" class="form-label">Equipo</label>
+                <input
+                  type="text"
+                  id="team"
+                  class="form-control"
+                  formControlName="team"
+                  placeholder="Ej: Liga de la Justicia"
+                />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">
+                Poderes <span class="text-danger">*</span>
+              </label>
+              <div formArrayName="powers">
+                @for (power of powersFormArray.controls; track power; let i =
+                $index) {
+                <div class="input-group mb-2">
+                  <input
+                    type="text"
+                    class="form-control"
+                    [formControlName]="i"
+                    placeholder="Ej: Vuelo, Superfuerza..."
+                    [class.is-invalid]="isPowerInvalid(i)"
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    (click)="removePower(i)"
+                    [disabled]="powersFormArray.length <= 1"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+                }
+              </div>
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                (click)="addPower()"
+              >
+                <i class="fas fa-plus me-1"></i>
+                Agregar Poder
+              </button>
+              <div
+                class="text-danger mt-1"
+                *ngIf="powersFormArray.invalid && powersFormArray.touched"
+              >
+                <small>Debe agregar al menos un poder válido</small>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">
+                Descripción <span class="text-danger">*</span>
+              </label>
+              <textarea
+                id="description"
+                class="form-control"
+                formControlName="description"
+                rows="4"
+                placeholder="Descripción del superhéroe..."
+                [class.is-invalid]="isFieldInvalid('description')"
+                [class.is-valid]="isFieldValid('description')"
+              ></textarea>
+              @if(isFieldInvalid('description')) {
+              <div class="invalid-feedback">
+                <small
+                  *ngIf="heroForm.get('description')?.errors?.['required']"
+                >
+                  La descripción es obligatoria
+                </small>
+                <small
+                  *ngIf="heroForm.get('description')?.errors?.['minlength']"
+                >
+                  La descripción debe tener al menos 10 caracteres
+                </small>
+              </div>
+              }
+            </div>
+
+            <div class="mb-4">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="isActive"
+                  formControlName="isActive"
+                />
+                <label class="form-check-label" for="isActive">
+                  Superhéroe activo
+                </label>
+              </div>
+            </div>
+
+            @if(heroForm.invalid && isFormTouched()) {
+            <div class="alert alert-info mt-3">
+              <i class="fas fa-info-circle me-2"></i>
+              <strong>Información:</strong> Complete todos los campos
+              obligatorios marcados con <span class="text-danger">*</span>
+            </div>
+            }
+
+            <div class="d-flex justify-content-end gap-2">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="goBack()"
+                [disabled]="loadingService.isLoading()"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="heroForm.invalid || loadingService.isLoading()"
+              >
+                @if(loadingService.isLoading()) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                }
+                {{ isEditMode() ? "Actualizar" : "Crear" }} Superhéroe
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

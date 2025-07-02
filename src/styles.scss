@@ -1,0 +1,15 @@
+// Personalización de variables de Bootstrap
+$primary: #6c757d; // Gris (gray-600 de Bootstrap)
+
+// También puedes personalizar otros colores relacionados si lo deseas
+$btn-primary-bg: $primary;
+$btn-primary-border-color: $primary;
+$link-color: $primary;
+
+// Importar Bootstrap después de las variables personalizadas
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+body,
+html {
+  background: #eeeeee;
+}

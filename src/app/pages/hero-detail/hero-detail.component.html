@@ -1,0 +1,126 @@
+@if (!loadingService.isLoading()) {
+<div class="container py-4">
+  @if(hero()) {
+  <div class="d-flex align-items-center mb-4">
+    <button class="btn btn-outline-secondary me-3" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h1 class="h2 mb-0">
+      <i class="fas fa-user text-primary me-2"></i>
+      Detalles del Superhéroe
+    </h1>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="card hero-card shadow-lg">
+        <div
+          class="card-header bg-dark text-white text-center py-4"
+          [class.bg-success]="hero()!.isActive"
+          [class.bg-secondary]="!hero()!.isActive"
+        >
+          <h2 class="mb-0">{{ hero()!.name }}</h2>
+          <p class="mb-0 opacity-75">{{ hero()!.realName }}</p>
+        </div>
+
+        <div class="card-body p-0">
+          <div class="row g-0">
+            <div class="col-md-12">
+              <div class="p-4">
+                <div class="mb-4">
+                  <h5 class="text-primary mb-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Información Personal
+                  </h5>
+                  <div class="row">
+                    <div class="col-sm-6 mb-3">
+                      <strong class="text-muted">Nombre Real:</strong>
+                      <p class="mb-0">{{ hero()!.realName }}</p>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                      <strong class="text-muted">Ciudad:</strong>
+                      <p class="mb-0">
+                        <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                        {{ hero()!.city }}
+                      </p>
+                    </div>
+                    @if(hero()!.team) {
+                    <div class="col-sm-6 mb-3">
+                      <strong class="text-muted">Equipo:</strong>
+                      <p class="mb-0">
+                        <span class="badge bg-info fs-6">{{
+                          hero()!.team
+                        }}</span>
+                      </p>
+                    </div>
+                    }
+                    <div class="col-sm-6 mb-3">
+                      <strong class="text-muted">Estado:</strong>
+                      <p class="mb-0">
+                        <i
+                          class="fas fa-circle me-1"
+                          [class.text-success]="hero()!.isActive"
+                          [class.text-danger]="!hero()!.isActive"
+                        ></i>
+                        {{ hero()!.isActive ? "Activo" : "Inactivo" }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <h5 class="text-primary mb-3">
+                    <i class="fas fa-bolt me-2"></i>
+                    Superpoderes
+                  </h5>
+                  <div class="d-flex flex-wrap gap-2">
+                    @for (power of hero()!.powers; track $index; let i = $index)
+                    {
+                    <span class="badge bg-warning fs-6 p-2">
+                      <i class="fas fa-star-0 me-1"></i>
+                      {{ power }}
+                    </span>
+                    }
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <h5 class="text-primary mb-3">
+                    <i class="fas fa-scroll me-2"></i>
+                    Descripción
+                  </h5>
+                  <p class="text-muted mb-0">{{ hero()!.description }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer bg-light">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="text-muted">
+              <small>
+                <i class="fas fa-fingerprint me-1"></i>
+                ID: {{ hero()!.id }}
+              </small>
+            </div>
+            <div class="btn-group">
+              <button class="btn btn-success" (click)="editHero()">
+                <i class="fas fa-edit me-2"></i>
+                Editar
+              </button>
+              <button class="btn btn-danger" (click)="confirmDelete()">
+                <i class="fas fa-trash me-2"></i>
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  } @else {
+  <app-not-found [notFoundMessage]="notFoundMessage"></app-not-found>
+  }
+</div>
+}
